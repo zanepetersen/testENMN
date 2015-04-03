@@ -1,0 +1,630 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
+  <!-- EF Runtime content -->
+  <edmx:Runtime>
+    <!-- SSDL content -->
+    <edmx:StorageModels>
+      <Schema Namespace="zpeterseModel.Store" Provider="MySql.Data.MySqlClient" ProviderManifestToken="5.5" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+        <EntityType Name="ForumPost">
+          <Key>
+            <PropertyRef Name="PostID" />
+          </Key>
+          <Property Name="PostID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="PersonID" Type="int" Nullable="false" />
+          <Property Name="ThreadID" Type="int" Nullable="false" />
+          <Property Name="OrderNo" Type="int" Nullable="false" />
+          <Property Name="DateTime" Type="datetime" Precision="0" Nullable="false" />
+          <Property Name="Text" Type="varchar" MaxLength="45" Nullable="false" />
+        </EntityType>
+        <EntityType Name="ForumThread">
+          <Key>
+            <PropertyRef Name="ForumThreadID" />
+          </Key>
+          <Property Name="ForumThreadID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Creator" Type="int" Nullable="false" />
+          <Property Name="Title" Type="varchar" MaxLength="45" Nullable="false" />
+        </EntityType>
+        <EntityType Name="Group">
+          <Key>
+            <PropertyRef Name="GroupID" />
+          </Key>
+          <Property Name="GroupID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Name" Type="varchar" MaxLength="45" Nullable="false" />
+          <Property Name="isDeleted" Type="bool" Nullable="false" />
+        </EntityType>
+        <EntityType Name="GroupMembers">
+          <Key>
+            <PropertyRef Name="GroupMembersID" />
+          </Key>
+          <Property Name="GroupMembersID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="PersonID" Type="int" Nullable="false" />
+          <Property Name="GroupID" Type="int" Nullable="false" />
+        </EntityType>
+        <EntityType Name="Message">
+          <Key>
+            <PropertyRef Name="MessageID" />
+          </Key>
+          <Property Name="MessageID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="MessageThreadID" Type="int" Nullable="false" />
+          <Property Name="DateTime" Type="datetime" Precision="0" Nullable="false" />
+          <Property Name="OrderNo" Type="int" Nullable="false" />
+        </EntityType>
+        <EntityType Name="MessageThread">
+          <Key>
+            <PropertyRef Name="MessageThreadID" />
+          </Key>
+          <Property Name="MessageThreadID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="NurseID" Type="int" Nullable="false" />
+          <Property Name="MotherID" Type="int" Nullable="false" />
+        </EntityType>
+        <EntityType Name="Mother">
+          <Key>
+            <PropertyRef Name="MotherID" />
+          </Key>
+          <Property Name="MotherID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="BabyFirstName" Type="varchar" MaxLength="45" />
+          <Property Name="BabyLastName" Type="varchar" MaxLength="45" />
+          <Property Name="Gender" Type="varchar" MaxLength="45" />
+          <Property Name="DOB" Type="date" Nullable="false" />
+        </EntityType>
+        <EntityType Name="Person">
+          <Key>
+            <PropertyRef Name="PersonID" />
+          </Key>
+          <Property Name="PersonID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="FirstName" Type="varchar" MaxLength="45" Nullable="false" />
+          <Property Name="LastName" Type="varchar" MaxLength="45" Nullable="false" />
+          <Property Name="Type" Type="enum" Nullable="false" />
+          <Property Name="Email" Type="varchar" MaxLength="45" Nullable="false" />
+          <Property Name="Password" Type="varchar" MaxLength="45" Nullable="false" />
+        </EntityType>
+        <EntityType Name="Picture">
+          <Key>
+            <PropertyRef Name="PictureID" />
+          </Key>
+          <Property Name="PictureID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Link" Type="varchar" MaxLength="45" Nullable="false" />
+          <Property Name="TextBlastID" Type="int" Nullable="false" />
+        </EntityType>
+        <EntityType Name="Session">
+          <Key>
+            <PropertyRef Name="SessionID" />
+          </Key>
+          <Property Name="SessionID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="PersonID" Type="int" Nullable="false" />
+          <Property Name="Start" Type="time" Precision="0" Nullable="false" />
+          <Property Name="End" Type="time" Precision="0" Nullable="false" />
+          <Property Name="Type" Type="enum" Nullable="false" />
+        </EntityType>
+        <EntityType Name="TextBlast">
+          <Key>
+            <PropertyRef Name="TextBlastID" />
+          </Key>
+          <Property Name="TextBlastID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Title" Type="varchar" MaxLength="45" Nullable="false" />
+          <Property Name="Creator" Type="int" Nullable="false" />
+          <Property Name="GroupID" Type="int" Nullable="false" />
+          <Property Name="DateSent" Type="datetime" Precision="0" Nullable="false" />
+        </EntityType>
+        <EntityType Name="TextField">
+          <Key>
+            <PropertyRef Name="TextFieldID" />
+          </Key>
+          <Property Name="TextFieldID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="TextBlastID" Type="int" Nullable="false" />
+        </EntityType>
+        <EntityType Name="TextFieldResponse">
+          <Key>
+            <PropertyRef Name="TextFieldResponseID" />
+          </Key>
+          <Property Name="TextFieldResponseID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Text" Type="varchar" MaxLength="45" Nullable="false" />
+          <Property Name="Responder" Type="int" Nullable="false" />
+        </EntityType>
+        <EntityType Name="TextView">
+          <Key>
+            <PropertyRef Name="TextViewID" />
+          </Key>
+          <Property Name="TextViewID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Text" Type="varchar" MaxLength="45" Nullable="false" />
+          <Property Name="TextBlastID" Type="int" Nullable="false" />
+        </EntityType>
+        <Association Name="Creator">
+          <End Role="Person" Type="Self.Person" Multiplicity="1" />
+          <End Role="TextBlast" Type="Self.TextBlast" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Person">
+              <PropertyRef Name="PersonID" />
+            </Principal>
+            <Dependent Role="TextBlast">
+              <PropertyRef Name="Creator" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="MotherID">
+          <End Role="Person" Type="Self.Person" Multiplicity="1" />
+          <End Role="Mother" Type="Self.Mother" Multiplicity="0..1" />
+          <ReferentialConstraint>
+            <Principal Role="Person">
+              <PropertyRef Name="PersonID" />
+            </Principal>
+            <Dependent Role="Mother">
+              <PropertyRef Name="MotherID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="Owner">
+          <End Role="TextBlast" Type="Self.TextBlast" Multiplicity="1" />
+          <End Role="TextView" Type="Self.TextView" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="TextBlast">
+              <PropertyRef Name="TextBlastID" />
+            </Principal>
+            <Dependent Role="TextView">
+              <PropertyRef Name="TextBlastID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="Person1">
+          <End Role="Person" Type="Self.Person" Multiplicity="1" />
+          <End Role="Session" Type="Self.Session" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Person">
+              <PropertyRef Name="PersonID" />
+            </Principal>
+            <Dependent Role="Session">
+              <PropertyRef Name="PersonID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="SentToGroup">
+          <End Role="Group" Type="Self.Group" Multiplicity="1" />
+          <End Role="TextBlast" Type="Self.TextBlast" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Group">
+              <PropertyRef Name="GroupID" />
+            </Principal>
+            <Dependent Role="TextBlast">
+              <PropertyRef Name="GroupID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityContainer Name="zpeterseModelStoreContainer">
+          <EntitySet Name="ForumPost" EntityType="Self.ForumPost" Schema="zpeterse" store:Type="Tables" />
+          <EntitySet Name="ForumThread" EntityType="Self.ForumThread" Schema="zpeterse" store:Type="Tables" />
+          <EntitySet Name="Group" EntityType="Self.Group" Schema="zpeterse" store:Type="Tables" />
+          <EntitySet Name="GroupMembers" EntityType="Self.GroupMembers" Schema="zpeterse" store:Type="Tables" />
+          <EntitySet Name="Message" EntityType="Self.Message" Schema="zpeterse" store:Type="Tables" />
+          <EntitySet Name="MessageThread" EntityType="Self.MessageThread" Schema="zpeterse" store:Type="Tables" />
+          <EntitySet Name="Mother" EntityType="Self.Mother" Schema="zpeterse" store:Type="Tables" />
+          <EntitySet Name="Person" EntityType="Self.Person" Schema="zpeterse" store:Type="Tables" />
+          <EntitySet Name="Picture" EntityType="Self.Picture" Schema="zpeterse" store:Type="Tables" />
+          <EntitySet Name="Session" EntityType="Self.Session" Schema="zpeterse" store:Type="Tables" />
+          <EntitySet Name="TextBlast" EntityType="Self.TextBlast" Schema="zpeterse" store:Type="Tables" />
+          <EntitySet Name="TextField" EntityType="Self.TextField" Schema="zpeterse" store:Type="Tables" />
+          <EntitySet Name="TextFieldResponse" EntityType="Self.TextFieldResponse" Schema="zpeterse" store:Type="Tables" />
+          <EntitySet Name="TextView" EntityType="Self.TextView" Schema="zpeterse" store:Type="Tables" />
+          <AssociationSet Name="Creator" Association="Self.Creator">
+            <End Role="Person" EntitySet="Person" />
+            <End Role="TextBlast" EntitySet="TextBlast" />
+          </AssociationSet>
+          <AssociationSet Name="MotherID" Association="Self.MotherID">
+            <End Role="Person" EntitySet="Person" />
+            <End Role="Mother" EntitySet="Mother" />
+          </AssociationSet>
+          <AssociationSet Name="Owner" Association="Self.Owner">
+            <End Role="TextBlast" EntitySet="TextBlast" />
+            <End Role="TextView" EntitySet="TextView" />
+          </AssociationSet>
+          <AssociationSet Name="Person1" Association="Self.Person1">
+            <End Role="Person" EntitySet="Person" />
+            <End Role="Session" EntitySet="Session" />
+          </AssociationSet>
+          <AssociationSet Name="SentToGroup" Association="Self.SentToGroup">
+            <End Role="Group" EntitySet="Group" />
+            <End Role="TextBlast" EntitySet="TextBlast" />
+          </AssociationSet>
+        </EntityContainer>
+      </Schema>
+    </edmx:StorageModels>
+    <!-- CSDL content -->
+    <edmx:ConceptualModels>
+      <Schema Namespace="zpeterseModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
+        <EntityType Name="ForumPost">
+          <Key>
+            <PropertyRef Name="PostID" />
+          </Key>
+          <Property Name="PostID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="PersonID" Type="Int32" Nullable="false" />
+          <Property Name="ThreadID" Type="Int32" Nullable="false" />
+          <Property Name="OrderNo" Type="Int32" Nullable="false" />
+          <Property Name="DateTime" Type="DateTime" Nullable="false" />
+          <Property Name="Text" Type="String" MaxLength="45" FixedLength="false" Unicode="false" Nullable="false" />
+        </EntityType>
+        <EntityType Name="ForumThread">
+          <Key>
+            <PropertyRef Name="ForumThreadID" />
+          </Key>
+          <Property Name="ForumThreadID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Creator" Type="Int32" Nullable="false" />
+          <Property Name="Title" Type="String" MaxLength="45" FixedLength="false" Unicode="false" Nullable="false" />
+        </EntityType>
+        <EntityType Name="Group">
+          <Key>
+            <PropertyRef Name="GroupID" />
+          </Key>
+          <Property Name="GroupID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Name" Type="String" MaxLength="45" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="isDeleted" Type="Boolean" Nullable="false" />
+          <NavigationProperty Name="TextBlasts" Relationship="Self.SentToGroup" FromRole="Group" ToRole="TextBlast" />
+        </EntityType>
+        <EntityType Name="GroupMember">
+          <Key>
+            <PropertyRef Name="GroupMembersID" />
+          </Key>
+          <Property Name="GroupMembersID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="PersonID" Type="Int32" Nullable="false" />
+          <Property Name="GroupID" Type="Int32" Nullable="false" />
+        </EntityType>
+        <EntityType Name="Message">
+          <Key>
+            <PropertyRef Name="MessageID" />
+          </Key>
+          <Property Name="MessageID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="MessageThreadID" Type="Int32" Nullable="false" />
+          <Property Name="DateTime" Type="DateTime" Nullable="false" />
+          <Property Name="OrderNo" Type="Int32" Nullable="false" />
+        </EntityType>
+        <EntityType Name="MessageThread">
+          <Key>
+            <PropertyRef Name="MessageThreadID" />
+          </Key>
+          <Property Name="MessageThreadID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="NurseID" Type="Int32" Nullable="false" />
+          <Property Name="MotherID" Type="Int32" Nullable="false" />
+        </EntityType>
+        <EntityType Name="Mother">
+          <Key>
+            <PropertyRef Name="MotherID" />
+          </Key>
+          <Property Name="MotherID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="BabyFirstName" Type="String" MaxLength="45" FixedLength="false" Unicode="false" />
+          <Property Name="BabyLastName" Type="String" MaxLength="45" FixedLength="false" Unicode="false" />
+          <Property Name="Gender" Type="String" MaxLength="45" FixedLength="false" Unicode="false" />
+          <Property Name="DOB" Type="DateTime" Nullable="false" />
+          <NavigationProperty Name="Person" Relationship="Self.MotherID" FromRole="Mother" ToRole="Person" />
+        </EntityType>
+        <EntityType Name="Person">
+          <Key>
+            <PropertyRef Name="PersonID" />
+          </Key>
+          <Property Name="PersonID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="FirstName" Type="String" MaxLength="45" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="LastName" Type="String" MaxLength="45" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="Type" Type="String" MaxLength="65532" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="Email" Type="String" MaxLength="45" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="Password" Type="String" MaxLength="45" FixedLength="false" Unicode="false" Nullable="false" />
+          <NavigationProperty Name="Mother" Relationship="Self.MotherID" FromRole="Person" ToRole="Mother" />
+          <NavigationProperty Name="TextBlasts" Relationship="Self.Creator" FromRole="Person" ToRole="TextBlast" />
+          <NavigationProperty Name="Sessions" Relationship="Self.Person1" FromRole="Person" ToRole="Session" />
+        </EntityType>
+        <EntityType Name="Picture">
+          <Key>
+            <PropertyRef Name="PictureID" />
+          </Key>
+          <Property Name="PictureID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Link" Type="String" MaxLength="45" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="TextBlastID" Type="Int32" Nullable="false" />
+        </EntityType>
+        <EntityType Name="Session">
+          <Key>
+            <PropertyRef Name="SessionID" />
+          </Key>
+          <Property Name="SessionID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="PersonID" Type="Int32" Nullable="false" />
+          <Property Name="Start" Type="Time" Nullable="false" />
+          <Property Name="End" Type="Time" Nullable="false" />
+          <Property Name="Type" Type="String" MaxLength="65532" FixedLength="false" Unicode="false" Nullable="false" />
+          <NavigationProperty Name="Person" Relationship="Self.Person1" FromRole="Session" ToRole="Person" />
+        </EntityType>
+        <EntityType Name="TextBlast">
+          <Key>
+            <PropertyRef Name="TextBlastID" />
+          </Key>
+          <Property Name="TextBlastID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Title" Type="String" MaxLength="45" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="Creator" Type="Int32" Nullable="false" />
+          <Property Name="GroupID" Type="Int32" Nullable="false" />
+          <Property Name="DateSent" Type="DateTime" Nullable="false" />
+          <NavigationProperty Name="Group" Relationship="Self.SentToGroup" FromRole="TextBlast" ToRole="Group" />
+          <NavigationProperty Name="Person" Relationship="Self.Creator" FromRole="TextBlast" ToRole="Person" />
+          <NavigationProperty Name="TextViews" Relationship="Self.Owner" FromRole="TextBlast" ToRole="TextView" />
+        </EntityType>
+        <EntityType Name="TextField">
+          <Key>
+            <PropertyRef Name="TextFieldID" />
+          </Key>
+          <Property Name="TextFieldID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="TextBlastID" Type="Int32" Nullable="false" />
+        </EntityType>
+        <EntityType Name="TextFieldResponse">
+          <Key>
+            <PropertyRef Name="TextFieldResponseID" />
+          </Key>
+          <Property Name="TextFieldResponseID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Text" Type="String" MaxLength="45" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="Responder" Type="Int32" Nullable="false" />
+        </EntityType>
+        <EntityType Name="TextView">
+          <Key>
+            <PropertyRef Name="TextViewID" />
+          </Key>
+          <Property Name="TextViewID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Text" Type="String" MaxLength="45" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="TextBlastID" Type="Int32" Nullable="false" />
+          <NavigationProperty Name="TextBlast" Relationship="Self.Owner" FromRole="TextView" ToRole="TextBlast" />
+        </EntityType>
+        <Association Name="SentToGroup">
+          <End Role="Group" Type="Self.Group" Multiplicity="1" />
+          <End Role="TextBlast" Type="Self.TextBlast" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Group">
+              <PropertyRef Name="GroupID" />
+            </Principal>
+            <Dependent Role="TextBlast">
+              <PropertyRef Name="GroupID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="MotherID">
+          <End Role="Person" Type="Self.Person" Multiplicity="1" />
+          <End Role="Mother" Type="Self.Mother" Multiplicity="0..1" />
+          <ReferentialConstraint>
+            <Principal Role="Person">
+              <PropertyRef Name="PersonID" />
+            </Principal>
+            <Dependent Role="Mother">
+              <PropertyRef Name="MotherID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="Creator">
+          <End Role="Person" Type="Self.Person" Multiplicity="1" />
+          <End Role="TextBlast" Type="Self.TextBlast" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Person">
+              <PropertyRef Name="PersonID" />
+            </Principal>
+            <Dependent Role="TextBlast">
+              <PropertyRef Name="Creator" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="Person1">
+          <End Role="Person" Type="Self.Person" Multiplicity="1" />
+          <End Role="Session" Type="Self.Session" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Person">
+              <PropertyRef Name="PersonID" />
+            </Principal>
+            <Dependent Role="Session">
+              <PropertyRef Name="PersonID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="Owner">
+          <End Role="TextBlast" Type="Self.TextBlast" Multiplicity="1" />
+          <End Role="TextView" Type="Self.TextView" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="TextBlast">
+              <PropertyRef Name="TextBlastID" />
+            </Principal>
+            <Dependent Role="TextView">
+              <PropertyRef Name="TextBlastID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityContainer Name="zpeterseEntities" annotation:LazyLoadingEnabled="true">
+          <EntitySet Name="ForumPosts" EntityType="Self.ForumPost" />
+          <EntitySet Name="ForumThreads" EntityType="Self.ForumThread" />
+          <EntitySet Name="Groups" EntityType="Self.Group" />
+          <EntitySet Name="GroupMembers" EntityType="Self.GroupMember" />
+          <EntitySet Name="Messages" EntityType="Self.Message" />
+          <EntitySet Name="MessageThreads" EntityType="Self.MessageThread" />
+          <EntitySet Name="Mothers" EntityType="Self.Mother" />
+          <EntitySet Name="People" EntityType="Self.Person" />
+          <EntitySet Name="Pictures" EntityType="Self.Picture" />
+          <EntitySet Name="Sessions" EntityType="Self.Session" />
+          <EntitySet Name="TextBlasts" EntityType="Self.TextBlast" />
+          <EntitySet Name="TextFields" EntityType="Self.TextField" />
+          <EntitySet Name="TextFieldResponses" EntityType="Self.TextFieldResponse" />
+          <EntitySet Name="TextViews" EntityType="Self.TextView" />
+          <AssociationSet Name="SentToGroup" Association="Self.SentToGroup">
+            <End Role="Group" EntitySet="Groups" />
+            <End Role="TextBlast" EntitySet="TextBlasts" />
+          </AssociationSet>
+          <AssociationSet Name="MotherID" Association="Self.MotherID">
+            <End Role="Person" EntitySet="People" />
+            <End Role="Mother" EntitySet="Mothers" />
+          </AssociationSet>
+          <AssociationSet Name="Creator" Association="Self.Creator">
+            <End Role="Person" EntitySet="People" />
+            <End Role="TextBlast" EntitySet="TextBlasts" />
+          </AssociationSet>
+          <AssociationSet Name="Person1" Association="Self.Person1">
+            <End Role="Person" EntitySet="People" />
+            <End Role="Session" EntitySet="Sessions" />
+          </AssociationSet>
+          <AssociationSet Name="Owner" Association="Self.Owner">
+            <End Role="TextBlast" EntitySet="TextBlasts" />
+            <End Role="TextView" EntitySet="TextViews" />
+          </AssociationSet>
+        </EntityContainer>
+      </Schema>
+    </edmx:ConceptualModels>
+    <!-- C-S mapping content -->
+    <edmx:Mappings>
+      <Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
+        <EntityContainerMapping StorageEntityContainer="zpeterseModelStoreContainer" CdmEntityContainer="zpeterseEntities">
+          <EntitySetMapping Name="ForumPosts">
+            <EntityTypeMapping TypeName="zpeterseModel.ForumPost">
+              <MappingFragment StoreEntitySet="ForumPost">
+                <ScalarProperty Name="PostID" ColumnName="PostID" />
+                <ScalarProperty Name="PersonID" ColumnName="PersonID" />
+                <ScalarProperty Name="ThreadID" ColumnName="ThreadID" />
+                <ScalarProperty Name="OrderNo" ColumnName="OrderNo" />
+                <ScalarProperty Name="DateTime" ColumnName="DateTime" />
+                <ScalarProperty Name="Text" ColumnName="Text" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="ForumThreads">
+            <EntityTypeMapping TypeName="zpeterseModel.ForumThread">
+              <MappingFragment StoreEntitySet="ForumThread">
+                <ScalarProperty Name="ForumThreadID" ColumnName="ForumThreadID" />
+                <ScalarProperty Name="Creator" ColumnName="Creator" />
+                <ScalarProperty Name="Title" ColumnName="Title" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Groups">
+            <EntityTypeMapping TypeName="zpeterseModel.Group">
+              <MappingFragment StoreEntitySet="Group">
+                <ScalarProperty Name="GroupID" ColumnName="GroupID" />
+                <ScalarProperty Name="Name" ColumnName="Name" />
+                <ScalarProperty Name="isDeleted" ColumnName="isDeleted" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="GroupMembers">
+            <EntityTypeMapping TypeName="zpeterseModel.GroupMember">
+              <MappingFragment StoreEntitySet="GroupMembers">
+                <ScalarProperty Name="GroupMembersID" ColumnName="GroupMembersID" />
+                <ScalarProperty Name="PersonID" ColumnName="PersonID" />
+                <ScalarProperty Name="GroupID" ColumnName="GroupID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Messages">
+            <EntityTypeMapping TypeName="zpeterseModel.Message">
+              <MappingFragment StoreEntitySet="Message">
+                <ScalarProperty Name="MessageID" ColumnName="MessageID" />
+                <ScalarProperty Name="MessageThreadID" ColumnName="MessageThreadID" />
+                <ScalarProperty Name="DateTime" ColumnName="DateTime" />
+                <ScalarProperty Name="OrderNo" ColumnName="OrderNo" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="MessageThreads">
+            <EntityTypeMapping TypeName="zpeterseModel.MessageThread">
+              <MappingFragment StoreEntitySet="MessageThread">
+                <ScalarProperty Name="MessageThreadID" ColumnName="MessageThreadID" />
+                <ScalarProperty Name="NurseID" ColumnName="NurseID" />
+                <ScalarProperty Name="MotherID" ColumnName="MotherID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Mothers">
+            <EntityTypeMapping TypeName="zpeterseModel.Mother">
+              <MappingFragment StoreEntitySet="Mother">
+                <ScalarProperty Name="MotherID" ColumnName="MotherID" />
+                <ScalarProperty Name="BabyFirstName" ColumnName="BabyFirstName" />
+                <ScalarProperty Name="BabyLastName" ColumnName="BabyLastName" />
+                <ScalarProperty Name="Gender" ColumnName="Gender" />
+                <ScalarProperty Name="DOB" ColumnName="DOB" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="People">
+            <EntityTypeMapping TypeName="zpeterseModel.Person">
+              <MappingFragment StoreEntitySet="Person">
+                <ScalarProperty Name="PersonID" ColumnName="PersonID" />
+                <ScalarProperty Name="FirstName" ColumnName="FirstName" />
+                <ScalarProperty Name="LastName" ColumnName="LastName" />
+                <ScalarProperty Name="Type" ColumnName="Type" />
+                <ScalarProperty Name="Email" ColumnName="Email" />
+                <ScalarProperty Name="Password" ColumnName="Password" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Pictures">
+            <EntityTypeMapping TypeName="zpeterseModel.Picture">
+              <MappingFragment StoreEntitySet="Picture">
+                <ScalarProperty Name="PictureID" ColumnName="PictureID" />
+                <ScalarProperty Name="Link" ColumnName="Link" />
+                <ScalarProperty Name="TextBlastID" ColumnName="TextBlastID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Sessions">
+            <EntityTypeMapping TypeName="zpeterseModel.Session">
+              <MappingFragment StoreEntitySet="Session">
+                <ScalarProperty Name="SessionID" ColumnName="SessionID" />
+                <ScalarProperty Name="PersonID" ColumnName="PersonID" />
+                <ScalarProperty Name="Start" ColumnName="Start" />
+                <ScalarProperty Name="End" ColumnName="End" />
+                <ScalarProperty Name="Type" ColumnName="Type" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="TextBlasts">
+            <EntityTypeMapping TypeName="zpeterseModel.TextBlast">
+              <MappingFragment StoreEntitySet="TextBlast">
+                <ScalarProperty Name="TextBlastID" ColumnName="TextBlastID" />
+                <ScalarProperty Name="Title" ColumnName="Title" />
+                <ScalarProperty Name="Creator" ColumnName="Creator" />
+                <ScalarProperty Name="GroupID" ColumnName="GroupID" />
+                <ScalarProperty Name="DateSent" ColumnName="DateSent" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="TextFields">
+            <EntityTypeMapping TypeName="zpeterseModel.TextField">
+              <MappingFragment StoreEntitySet="TextField">
+                <ScalarProperty Name="TextFieldID" ColumnName="TextFieldID" />
+                <ScalarProperty Name="TextBlastID" ColumnName="TextBlastID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="TextFieldResponses">
+            <EntityTypeMapping TypeName="zpeterseModel.TextFieldResponse">
+              <MappingFragment StoreEntitySet="TextFieldResponse">
+                <ScalarProperty Name="TextFieldResponseID" ColumnName="TextFieldResponseID" />
+                <ScalarProperty Name="Text" ColumnName="Text" />
+                <ScalarProperty Name="Responder" ColumnName="Responder" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="TextViews">
+            <EntityTypeMapping TypeName="zpeterseModel.TextView">
+              <MappingFragment StoreEntitySet="TextView">
+                <ScalarProperty Name="TextViewID" ColumnName="TextViewID" />
+                <ScalarProperty Name="Text" ColumnName="Text" />
+                <ScalarProperty Name="TextBlastID" ColumnName="TextBlastID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+        </EntityContainerMapping>
+      </Mapping>
+    </edmx:Mappings>
+  </edmx:Runtime>
+  <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
+    <Connection>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="MetadataArtifactProcessing" Value="EmbedInOutputAssembly" />
+      </DesignerInfoPropertySet>
+    </Connection>
+    <Options>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="ValidateOnBuild" Value="true" />
+        <DesignerProperty Name="EnablePluralization" Value="true" />
+        <DesignerProperty Name="IncludeForeignKeysInModel" Value="true" />
+        <DesignerProperty Name="UseLegacyProvider" Value="false" />
+        <DesignerProperty Name="CodeGenerationStrategy" Value="None" />
+      </DesignerInfoPropertySet>
+    </Options>
+    <!-- Diagram content (shape and connector positions) -->
+    <Diagrams></Diagrams>
+  </Designer>
+</edmx:Edmx>
