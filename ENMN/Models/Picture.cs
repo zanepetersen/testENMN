@@ -15,7 +15,9 @@ namespace ENMN.Models
     public partial class Picture
     {
         public int PictureID { get; set; }
-        public string Link { get; set; }
+        public byte[] Picture1 { get; set; }
         public int TextBlastID { get; set; }
+    
+        public virtual TextBlast TextBlast { get; set; }
     }
 }

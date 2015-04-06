@@ -18,6 +18,13 @@ namespace ENMN.Models
         {
             this.TextBlasts = new HashSet<TextBlast>();
             this.Sessions = new HashSet<Session>();
+            this.ForumPosts = new HashSet<ForumPost>();
+            this.ForumThreads = new HashSet<ForumThread>();
+            this.GroupMembers = new HashSet<GroupMember>();
+            this.Messages = new HashSet<Message>();
+            this.MessageThreads = new HashSet<MessageThread>();
+            this.MessageThreads1 = new HashSet<MessageThread>();
+            this.TextFieldResponses = new HashSet<TextFieldResponse>();
         }
     
         public int PersonID { get; set; }
@@ -26,9 +33,17 @@ namespace ENMN.Models
         public string Type { get; set; }
         public string Email { get; set; }
         public string Password { get; set; }
+        public string GCMConnectionString { get; set; }
     
         public virtual Mother Mother { get; set; }
         public virtual ICollection<TextBlast> TextBlasts { get; set; }
         public virtual ICollection<Session> Sessions { get; set; }
+        public virtual ICollection<ForumPost> ForumPosts { get; set; }
+        public virtual ICollection<ForumThread> ForumThreads { get; set; }
+        public virtual ICollection<GroupMember> GroupMembers { get; set; }
+        public virtual ICollection<Message> Messages { get; set; }
+        public virtual ICollection<MessageThread> MessageThreads { get; set; }
+        public virtual ICollection<MessageThread> MessageThreads1 { get; set; }
+        public virtual ICollection<TextFieldResponse> TextFieldResponses { get; set; }
     }
 }

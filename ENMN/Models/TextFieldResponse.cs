@@ -17,5 +17,9 @@ namespace ENMN.Models
         public int TextFieldResponseID { get; set; }
         public string Text { get; set; }
         public int Responder { get; set; }
+        public int TextFieldID { get; set; }
+    
+        public virtual Person Person { get; set; }
+        public virtual TextField TextField { get; set; }
     }
 }

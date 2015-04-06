@@ -17,5 +17,8 @@ namespace ENMN.Models
         public int GroupMembersID { get; set; }
         public int PersonID { get; set; }
         public int GroupID { get; set; }
+    
+        public virtual Group Group { get; set; }
+        public virtual Person Person { get; set; }
     }
 }

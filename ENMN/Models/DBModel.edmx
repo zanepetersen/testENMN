@@ -4,7 +4,7 @@
   <edmx:Runtime>
     <!-- SSDL content -->
     <edmx:StorageModels>
-      <Schema Namespace="zpeterseModel.Store" Provider="MySql.Data.MySqlClient" ProviderManifestToken="5.5" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+    <Schema Namespace="zpeterseModel.Store" Provider="MySql.Data.MySqlClient" ProviderManifestToken="5.5" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
         <EntityType Name="ForumPost">
           <Key>
             <PropertyRef Name="PostID" />
@@ -48,6 +48,8 @@
           <Property Name="MessageThreadID" Type="int" Nullable="false" />
           <Property Name="DateTime" Type="datetime" Precision="0" Nullable="false" />
           <Property Name="OrderNo" Type="int" Nullable="false" />
+          <Property Name="Text" Type="text" />
+          <Property Name="SenderID" Type="int" Nullable="false" />
         </EntityType>
         <EntityType Name="MessageThread">
           <Key>
@@ -77,13 +79,14 @@
           <Property Name="Type" Type="enum" Nullable="false" />
           <Property Name="Email" Type="varchar" MaxLength="45" Nullable="false" />
           <Property Name="Password" Type="varchar" MaxLength="45" Nullable="false" />
+          <Property Name="GCMConnectionString" Type="text" />
         </EntityType>
         <EntityType Name="Picture">
           <Key>
             <PropertyRef Name="PictureID" />
           </Key>
           <Property Name="PictureID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
-          <Property Name="Link" Type="varchar" MaxLength="45" Nullable="false" />
+          <Property Name="Picture" Type="blob" Nullable="false" />
           <Property Name="TextBlastID" Type="int" Nullable="false" />
         </EntityType>
         <EntityType Name="Session">
@@ -120,6 +123,7 @@
           <Property Name="TextFieldResponseID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
           <Property Name="Text" Type="varchar" MaxLength="45" Nullable="false" />
           <Property Name="Responder" Type="int" Nullable="false" />
+          <Property Name="TextFieldID" Type="int" Nullable="false" />
         </EntityType>
         <EntityType Name="TextView">
           <Key>
@@ -141,6 +145,30 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
+        <Association Name="MessageSender">
+          <End Role="Person" Type="Self.Person" Multiplicity="1" />
+          <End Role="Message" Type="Self.Message" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Person">
+              <PropertyRef Name="PersonID" />
+            </Principal>
+            <Dependent Role="Message">
+              <PropertyRef Name="SenderID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="Mother1">
+          <End Role="Person" Type="Self.Person" Multiplicity="1" />
+          <End Role="MessageThread" Type="Self.MessageThread" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Person">
+              <PropertyRef Name="PersonID" />
+            </Principal>
+            <Dependent Role="MessageThread">
+              <PropertyRef Name="MotherID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
         <Association Name="MotherID">
           <End Role="Person" Type="Self.Person" Multiplicity="1" />
           <End Role="Mother" Type="Self.Mother" Multiplicity="0..1" />
@@ -153,15 +181,63 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <Association Name="Owner">
-          <End Role="TextBlast" Type="Self.TextBlast" Multiplicity="1" />
-          <End Role="TextView" Type="Self.TextView" Multiplicity="*" />
+        <Association Name="Nurse">
+          <End Role="Person" Type="Self.Person" Multiplicity="1" />
+          <End Role="MessageThread" Type="Self.MessageThread" Multiplicity="*" />
           <ReferentialConstraint>
-            <Principal Role="TextBlast">
-              <PropertyRef Name="TextBlastID" />
+            <Principal Role="Person">
+              <PropertyRef Name="PersonID" />
             </Principal>
-            <Dependent Role="TextView">
-              <PropertyRef Name="TextBlastID" />
+            <Dependent Role="MessageThread">
+              <PropertyRef Name="NurseID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="ParentForumThread">
+          <End Role="ForumThread" Type="Self.ForumThread" Multiplicity="1" />
+          <End Role="ForumPost" Type="Self.ForumPost" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="ForumThread">
+              <PropertyRef Name="ForumThreadID" />
+            </Principal>
+            <Dependent Role="ForumPost">
+              <PropertyRef Name="ThreadID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="ParentMessageThread">
+          <End Role="MessageThread" Type="Self.MessageThread" Multiplicity="1" />
+          <End Role="Message" Type="Self.Message" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="MessageThread">
+              <PropertyRef Name="MessageThreadID" />
+            </Principal>
+            <Dependent Role="Message">
+              <PropertyRef Name="MessageThreadID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="ParentTextField">
+          <End Role="TextField" Type="Self.TextField" Multiplicity="1" />
+          <End Role="TextFieldResponse" Type="Self.TextFieldResponse" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="TextField">
+              <PropertyRef Name="TextFieldID" />
+            </Principal>
+            <Dependent Role="TextFieldResponse">
+              <PropertyRef Name="TextFieldID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="PartOfGroup">
+          <End Role="Group" Type="Self.Group" Multiplicity="1" />
+          <End Role="GroupMembers" Type="Self.GroupMembers" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Group">
+              <PropertyRef Name="GroupID" />
+            </Principal>
+            <Dependent Role="GroupMembers">
+              <PropertyRef Name="GroupID" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
@@ -177,6 +253,54 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
+        <Association Name="PersonInGroup">
+          <End Role="Person" Type="Self.Person" Multiplicity="1" />
+          <End Role="GroupMembers" Type="Self.GroupMembers" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Person">
+              <PropertyRef Name="PersonID" />
+            </Principal>
+            <Dependent Role="GroupMembers">
+              <PropertyRef Name="PersonID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="PictureOwner">
+          <End Role="TextBlast" Type="Self.TextBlast" Multiplicity="1" />
+          <End Role="Picture" Type="Self.Picture" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="TextBlast">
+              <PropertyRef Name="TextBlastID" />
+            </Principal>
+            <Dependent Role="Picture">
+              <PropertyRef Name="TextBlastID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="Poster">
+          <End Role="Person" Type="Self.Person" Multiplicity="1" />
+          <End Role="ForumPost" Type="Self.ForumPost" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Person">
+              <PropertyRef Name="PersonID" />
+            </Principal>
+            <Dependent Role="ForumPost">
+              <PropertyRef Name="PersonID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="Responder">
+          <End Role="Person" Type="Self.Person" Multiplicity="1" />
+          <End Role="TextFieldResponse" Type="Self.TextFieldResponse" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Person">
+              <PropertyRef Name="PersonID" />
+            </Principal>
+            <Dependent Role="TextFieldResponse">
+              <PropertyRef Name="Responder" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
         <Association Name="SentToGroup">
           <End Role="Group" Type="Self.Group" Multiplicity="1" />
           <End Role="TextBlast" Type="Self.TextBlast" Multiplicity="*" />
@@ -186,6 +310,42 @@
             </Principal>
             <Dependent Role="TextBlast">
               <PropertyRef Name="GroupID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="TextFieldOwner">
+          <End Role="TextBlast" Type="Self.TextBlast" Multiplicity="1" />
+          <End Role="TextField" Type="Self.TextField" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="TextBlast">
+              <PropertyRef Name="TextBlastID" />
+            </Principal>
+            <Dependent Role="TextField">
+              <PropertyRef Name="TextBlastID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="TextViewOwner">
+          <End Role="TextBlast" Type="Self.TextBlast" Multiplicity="1" />
+          <End Role="TextView" Type="Self.TextView" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="TextBlast">
+              <PropertyRef Name="TextBlastID" />
+            </Principal>
+            <Dependent Role="TextView">
+              <PropertyRef Name="TextBlastID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="ThreadCreator">
+          <End Role="Person" Type="Self.Person" Multiplicity="1" />
+          <End Role="ForumThread" Type="Self.ForumThread" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Person">
+              <PropertyRef Name="PersonID" />
+            </Principal>
+            <Dependent Role="ForumThread">
+              <PropertyRef Name="Creator" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
@@ -208,25 +368,76 @@
             <End Role="Person" EntitySet="Person" />
             <End Role="TextBlast" EntitySet="TextBlast" />
           </AssociationSet>
+          <AssociationSet Name="MessageSender" Association="Self.MessageSender">
+            <End Role="Person" EntitySet="Person" />
+            <End Role="Message" EntitySet="Message" />
+          </AssociationSet>
+          <AssociationSet Name="Mother1" Association="Self.Mother1">
+            <End Role="Person" EntitySet="Person" />
+            <End Role="MessageThread" EntitySet="MessageThread" />
+          </AssociationSet>
           <AssociationSet Name="MotherID" Association="Self.MotherID">
             <End Role="Person" EntitySet="Person" />
             <End Role="Mother" EntitySet="Mother" />
           </AssociationSet>
-          <AssociationSet Name="Owner" Association="Self.Owner">
-            <End Role="TextBlast" EntitySet="TextBlast" />
-            <End Role="TextView" EntitySet="TextView" />
+          <AssociationSet Name="Nurse" Association="Self.Nurse">
+            <End Role="Person" EntitySet="Person" />
+            <End Role="MessageThread" EntitySet="MessageThread" />
+          </AssociationSet>
+          <AssociationSet Name="ParentForumThread" Association="Self.ParentForumThread">
+            <End Role="ForumThread" EntitySet="ForumThread" />
+            <End Role="ForumPost" EntitySet="ForumPost" />
+          </AssociationSet>
+          <AssociationSet Name="ParentMessageThread" Association="Self.ParentMessageThread">
+            <End Role="MessageThread" EntitySet="MessageThread" />
+            <End Role="Message" EntitySet="Message" />
+          </AssociationSet>
+          <AssociationSet Name="ParentTextField" Association="Self.ParentTextField">
+            <End Role="TextField" EntitySet="TextField" />
+            <End Role="TextFieldResponse" EntitySet="TextFieldResponse" />
+          </AssociationSet>
+          <AssociationSet Name="PartOfGroup" Association="Self.PartOfGroup">
+            <End Role="Group" EntitySet="Group" />
+            <End Role="GroupMembers" EntitySet="GroupMembers" />
           </AssociationSet>
           <AssociationSet Name="Person1" Association="Self.Person1">
             <End Role="Person" EntitySet="Person" />
             <End Role="Session" EntitySet="Session" />
           </AssociationSet>
+          <AssociationSet Name="PersonInGroup" Association="Self.PersonInGroup">
+            <End Role="Person" EntitySet="Person" />
+            <End Role="GroupMembers" EntitySet="GroupMembers" />
+          </AssociationSet>
+          <AssociationSet Name="PictureOwner" Association="Self.PictureOwner">
+            <End Role="TextBlast" EntitySet="TextBlast" />
+            <End Role="Picture" EntitySet="Picture" />
+          </AssociationSet>
+          <AssociationSet Name="Poster" Association="Self.Poster">
+            <End Role="Person" EntitySet="Person" />
+            <End Role="ForumPost" EntitySet="ForumPost" />
+          </AssociationSet>
+          <AssociationSet Name="Responder" Association="Self.Responder">
+            <End Role="Person" EntitySet="Person" />
+            <End Role="TextFieldResponse" EntitySet="TextFieldResponse" />
+          </AssociationSet>
           <AssociationSet Name="SentToGroup" Association="Self.SentToGroup">
             <End Role="Group" EntitySet="Group" />
             <End Role="TextBlast" EntitySet="TextBlast" />
           </AssociationSet>
+          <AssociationSet Name="TextFieldOwner" Association="Self.TextFieldOwner">
+            <End Role="TextBlast" EntitySet="TextBlast" />
+            <End Role="TextField" EntitySet="TextField" />
+          </AssociationSet>
+          <AssociationSet Name="TextViewOwner" Association="Self.TextViewOwner">
+            <End Role="TextBlast" EntitySet="TextBlast" />
+            <End Role="TextView" EntitySet="TextView" />
+          </AssociationSet>
+          <AssociationSet Name="ThreadCreator" Association="Self.ThreadCreator">
+            <End Role="Person" EntitySet="Person" />
+            <End Role="ForumThread" EntitySet="ForumThread" />
+          </AssociationSet>
         </EntityContainer>
-      </Schema>
-    </edmx:StorageModels>
+      </Schema></edmx:StorageModels>
     <!-- CSDL content -->
     <edmx:ConceptualModels>
       <Schema Namespace="zpeterseModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
@@ -240,6 +451,8 @@
           <Property Name="OrderNo" Type="Int32" Nullable="false" />
           <Property Name="DateTime" Type="DateTime" Nullable="false" />
           <Property Name="Text" Type="String" MaxLength="45" FixedLength="false" Unicode="false" Nullable="false" />
+          <NavigationProperty Name="ForumThread" Relationship="zpeterseModel.ParentForumThread" FromRole="ForumPost" ToRole="ForumThread" />
+          <NavigationProperty Name="Person" Relationship="zpeterseModel.Poster" FromRole="ForumPost" ToRole="Person" />
         </EntityType>
         <EntityType Name="ForumThread">
           <Key>
@@ -248,6 +461,8 @@
           <Property Name="ForumThreadID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
           <Property Name="Creator" Type="Int32" Nullable="false" />
           <Property Name="Title" Type="String" MaxLength="45" FixedLength="false" Unicode="false" Nullable="false" />
+          <NavigationProperty Name="ForumPosts" Relationship="zpeterseModel.ParentForumThread" FromRole="ForumThread" ToRole="ForumPost" />
+          <NavigationProperty Name="Person" Relationship="zpeterseModel.ThreadCreator" FromRole="ForumThread" ToRole="Person" />
         </EntityType>
         <EntityType Name="Group">
           <Key>
@@ -257,6 +472,7 @@
           <Property Name="Name" Type="String" MaxLength="45" FixedLength="false" Unicode="false" Nullable="false" />
           <Property Name="isDeleted" Type="Boolean" Nullable="false" />
           <NavigationProperty Name="TextBlasts" Relationship="Self.SentToGroup" FromRole="Group" ToRole="TextBlast" />
+          <NavigationProperty Name="GroupMembers" Relationship="zpeterseModel.PartOfGroup" FromRole="Group" ToRole="GroupMember" />
         </EntityType>
         <EntityType Name="GroupMember">
           <Key>
@@ -265,6 +481,8 @@
           <Property Name="GroupMembersID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
           <Property Name="PersonID" Type="Int32" Nullable="false" />
           <Property Name="GroupID" Type="Int32" Nullable="false" />
+          <NavigationProperty Name="Group" Relationship="zpeterseModel.PartOfGroup" FromRole="GroupMember" ToRole="Group" />
+          <NavigationProperty Name="Person" Relationship="zpeterseModel.PersonInGroup" FromRole="GroupMember" ToRole="Person" />
         </EntityType>
         <EntityType Name="Message">
           <Key>
@@ -274,6 +492,10 @@
           <Property Name="MessageThreadID" Type="Int32" Nullable="false" />
           <Property Name="DateTime" Type="DateTime" Nullable="false" />
           <Property Name="OrderNo" Type="Int32" Nullable="false" />
+          <Property Name="Text" Type="String" MaxLength="65535" FixedLength="false" Unicode="false" />
+          <Property Name="SenderID" Type="Int32" Nullable="false" />
+          <NavigationProperty Name="Person" Relationship="zpeterseModel.MessageSender" FromRole="Message" ToRole="Person" />
+          <NavigationProperty Name="MessageThread" Relationship="zpeterseModel.ParentMessageThread" FromRole="Message" ToRole="MessageThread" />
         </EntityType>
         <EntityType Name="MessageThread">
           <Key>
@@ -282,6 +504,9 @@
           <Property Name="MessageThreadID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
           <Property Name="NurseID" Type="Int32" Nullable="false" />
           <Property Name="MotherID" Type="Int32" Nullable="false" />
+          <NavigationProperty Name="Messages" Relationship="zpeterseModel.ParentMessageThread" FromRole="MessageThread" ToRole="Message" />
+          <NavigationProperty Name="Person" Relationship="zpeterseModel.Mother1" FromRole="MessageThread" ToRole="Person" />
+          <NavigationProperty Name="Person1" Relationship="zpeterseModel.Nurse" FromRole="MessageThread" ToRole="Person" />
         </EntityType>
         <EntityType Name="Mother">
           <Key>
@@ -307,14 +532,14 @@
           <NavigationProperty Name="Mother" Relationship="Self.MotherID" FromRole="Person" ToRole="Mother" />
           <NavigationProperty Name="TextBlasts" Relationship="Self.Creator" FromRole="Person" ToRole="TextBlast" />
           <NavigationProperty Name="Sessions" Relationship="Self.Person1" FromRole="Person" ToRole="Session" />
-        </EntityType>
-        <EntityType Name="Picture">
-          <Key>
-            <PropertyRef Name="PictureID" />
-          </Key>
-          <Property Name="PictureID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <Property Name="Link" Type="String" MaxLength="45" FixedLength="false" Unicode="false" Nullable="false" />
-          <Property Name="TextBlastID" Type="Int32" Nullable="false" />
+          <Property Name="GCMConnectionString" Type="String" MaxLength="65535" FixedLength="false" Unicode="false" />
+          <NavigationProperty Name="ForumPosts" Relationship="zpeterseModel.Poster" FromRole="Person" ToRole="ForumPost" />
+          <NavigationProperty Name="ForumThreads" Relationship="zpeterseModel.ThreadCreator" FromRole="Person" ToRole="ForumThread" />
+          <NavigationProperty Name="GroupMembers" Relationship="zpeterseModel.PersonInGroup" FromRole="Person" ToRole="GroupMember" />
+          <NavigationProperty Name="Messages" Relationship="zpeterseModel.MessageSender" FromRole="Person" ToRole="Message" />
+          <NavigationProperty Name="MessageThreads" Relationship="zpeterseModel.Mother1" FromRole="Person" ToRole="MessageThread" />
+          <NavigationProperty Name="MessageThreads1" Relationship="zpeterseModel.Nurse" FromRole="Person" ToRole="MessageThread" />
+          <NavigationProperty Name="TextFieldResponses" Relationship="zpeterseModel.Responder" FromRole="Person" ToRole="TextFieldResponse" />
         </EntityType>
         <EntityType Name="Session">
           <Key>
@@ -339,6 +564,8 @@
           <NavigationProperty Name="Group" Relationship="Self.SentToGroup" FromRole="TextBlast" ToRole="Group" />
           <NavigationProperty Name="Person" Relationship="Self.Creator" FromRole="TextBlast" ToRole="Person" />
           <NavigationProperty Name="TextViews" Relationship="Self.Owner" FromRole="TextBlast" ToRole="TextView" />
+          <NavigationProperty Name="TextFields" Relationship="zpeterseModel.TextFieldOwner" FromRole="TextBlast" ToRole="TextField" />
+          <NavigationProperty Name="Pictures" Relationship="zpeterseModel.PictureOwner" FromRole="TextBlast" ToRole="Picture" />
         </EntityType>
         <EntityType Name="TextField">
           <Key>
@@ -346,6 +573,8 @@
           </Key>
           <Property Name="TextFieldID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
           <Property Name="TextBlastID" Type="Int32" Nullable="false" />
+          <NavigationProperty Name="TextBlast" Relationship="zpeterseModel.TextFieldOwner" FromRole="TextField" ToRole="TextBlast" />
+          <NavigationProperty Name="TextFieldResponses" Relationship="zpeterseModel.ParentTextField" FromRole="TextField" ToRole="TextFieldResponse" />
         </EntityType>
         <EntityType Name="TextFieldResponse">
           <Key>
@@ -354,6 +583,9 @@
           <Property Name="TextFieldResponseID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
           <Property Name="Text" Type="String" MaxLength="45" FixedLength="false" Unicode="false" Nullable="false" />
           <Property Name="Responder" Type="Int32" Nullable="false" />
+          <Property Name="TextFieldID" Type="Int32" Nullable="false" />
+          <NavigationProperty Name="Person" Relationship="zpeterseModel.Responder" FromRole="TextFieldResponse" ToRole="Person" />
+          <NavigationProperty Name="TextField" Relationship="zpeterseModel.ParentTextField" FromRole="TextFieldResponse" ToRole="TextField" />
         </EntityType>
         <EntityType Name="TextView">
           <Key>
@@ -433,7 +665,6 @@
           <EntitySet Name="MessageThreads" EntityType="Self.MessageThread" />
           <EntitySet Name="Mothers" EntityType="Self.Mother" />
           <EntitySet Name="People" EntityType="Self.Person" />
-          <EntitySet Name="Pictures" EntityType="Self.Picture" />
           <EntitySet Name="Sessions" EntityType="Self.Session" />
           <EntitySet Name="TextBlasts" EntityType="Self.TextBlast" />
           <EntitySet Name="TextFields" EntityType="Self.TextField" />
@@ -459,7 +690,225 @@
             <End Role="TextBlast" EntitySet="TextBlasts" />
             <End Role="TextView" EntitySet="TextViews" />
           </AssociationSet>
+          <AssociationSet Name="ParentForumThread" Association="zpeterseModel.ParentForumThread">
+            <End Role="ForumThread" EntitySet="ForumThreads" />
+            <End Role="ForumPost" EntitySet="ForumPosts" />
+          </AssociationSet>
+          <AssociationSet Name="Poster" Association="zpeterseModel.Poster">
+            <End Role="Person" EntitySet="People" />
+            <End Role="ForumPost" EntitySet="ForumPosts" />
+          </AssociationSet>
+          <AssociationSet Name="ThreadCreator" Association="zpeterseModel.ThreadCreator">
+            <End Role="Person" EntitySet="People" />
+            <End Role="ForumThread" EntitySet="ForumThreads" />
+          </AssociationSet>
+          <AssociationSet Name="PartOfGroup" Association="zpeterseModel.PartOfGroup">
+            <End Role="Group" EntitySet="Groups" />
+            <End Role="GroupMember" EntitySet="GroupMembers" />
+          </AssociationSet>
+          <AssociationSet Name="PersonInGroup" Association="zpeterseModel.PersonInGroup">
+            <End Role="Person" EntitySet="People" />
+            <End Role="GroupMember" EntitySet="GroupMembers" />
+          </AssociationSet>
+          <AssociationSet Name="MessageSender" Association="zpeterseModel.MessageSender">
+            <End Role="Person" EntitySet="People" />
+            <End Role="Message" EntitySet="Messages" />
+          </AssociationSet>
+          <AssociationSet Name="ParentMessageThread" Association="zpeterseModel.ParentMessageThread">
+            <End Role="MessageThread" EntitySet="MessageThreads" />
+            <End Role="Message" EntitySet="Messages" />
+          </AssociationSet>
+          <AssociationSet Name="Mother1" Association="zpeterseModel.Mother1">
+            <End Role="Person" EntitySet="People" />
+            <End Role="MessageThread" EntitySet="MessageThreads" />
+          </AssociationSet>
+          <AssociationSet Name="Nurse" Association="zpeterseModel.Nurse">
+            <End Role="Person" EntitySet="People" />
+            <End Role="MessageThread" EntitySet="MessageThreads" />
+          </AssociationSet>
+          <AssociationSet Name="Responder" Association="zpeterseModel.Responder">
+            <End Role="Person" EntitySet="People" />
+            <End Role="TextFieldResponse" EntitySet="TextFieldResponses" />
+          </AssociationSet>
+          <AssociationSet Name="TextFieldOwner" Association="zpeterseModel.TextFieldOwner">
+            <End Role="TextBlast" EntitySet="TextBlasts" />
+            <End Role="TextField" EntitySet="TextFields" />
+          </AssociationSet>
+          <AssociationSet Name="ParentTextField" Association="zpeterseModel.ParentTextField">
+            <End Role="TextField" EntitySet="TextFields" />
+            <End Role="TextFieldResponse" EntitySet="TextFieldResponses" />
+          </AssociationSet>
+          <EntitySet Name="Pictures" EntityType="zpeterseModel.Picture" />
+          <AssociationSet Name="PictureOwner" Association="zpeterseModel.PictureOwner">
+            <End Role="TextBlast" EntitySet="TextBlasts" />
+            <End Role="Picture" EntitySet="Pictures" />
+          </AssociationSet>
         </EntityContainer>
+        <Association Name="ParentForumThread">
+          <End Type="zpeterseModel.ForumThread" Role="ForumThread" Multiplicity="1" />
+          <End Type="zpeterseModel.ForumPost" Role="ForumPost" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="ForumThread">
+              <PropertyRef Name="ForumThreadID" />
+            </Principal>
+            <Dependent Role="ForumPost">
+              <PropertyRef Name="ThreadID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="Poster">
+          <End Type="zpeterseModel.Person" Role="Person" Multiplicity="1" />
+          <End Type="zpeterseModel.ForumPost" Role="ForumPost" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Person">
+              <PropertyRef Name="PersonID" />
+            </Principal>
+            <Dependent Role="ForumPost">
+              <PropertyRef Name="PersonID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="ThreadCreator">
+          <End Type="zpeterseModel.Person" Role="Person" Multiplicity="1" />
+          <End Type="zpeterseModel.ForumThread" Role="ForumThread" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Person">
+              <PropertyRef Name="PersonID" />
+            </Principal>
+            <Dependent Role="ForumThread">
+              <PropertyRef Name="Creator" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="PartOfGroup">
+          <End Type="zpeterseModel.Group" Role="Group" Multiplicity="1" />
+          <End Type="zpeterseModel.GroupMember" Role="GroupMember" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Group">
+              <PropertyRef Name="GroupID" />
+            </Principal>
+            <Dependent Role="GroupMember">
+              <PropertyRef Name="GroupID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="PersonInGroup">
+          <End Type="zpeterseModel.Person" Role="Person" Multiplicity="1" />
+          <End Type="zpeterseModel.GroupMember" Role="GroupMember" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Person">
+              <PropertyRef Name="PersonID" />
+            </Principal>
+            <Dependent Role="GroupMember">
+              <PropertyRef Name="PersonID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="MessageSender">
+          <End Type="zpeterseModel.Person" Role="Person" Multiplicity="1" />
+          <End Type="zpeterseModel.Message" Role="Message" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Person">
+              <PropertyRef Name="PersonID" />
+            </Principal>
+            <Dependent Role="Message">
+              <PropertyRef Name="SenderID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="ParentMessageThread">
+          <End Type="zpeterseModel.MessageThread" Role="MessageThread" Multiplicity="1" />
+          <End Type="zpeterseModel.Message" Role="Message" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="MessageThread">
+              <PropertyRef Name="MessageThreadID" />
+            </Principal>
+            <Dependent Role="Message">
+              <PropertyRef Name="MessageThreadID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="Mother1">
+          <End Type="zpeterseModel.Person" Role="Person" Multiplicity="1" />
+          <End Type="zpeterseModel.MessageThread" Role="MessageThread" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Person">
+              <PropertyRef Name="PersonID" />
+            </Principal>
+            <Dependent Role="MessageThread">
+              <PropertyRef Name="MotherID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="Nurse">
+          <End Type="zpeterseModel.Person" Role="Person" Multiplicity="1" />
+          <End Type="zpeterseModel.MessageThread" Role="MessageThread" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Person">
+              <PropertyRef Name="PersonID" />
+            </Principal>
+            <Dependent Role="MessageThread">
+              <PropertyRef Name="NurseID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="Responder">
+          <End Type="zpeterseModel.Person" Role="Person" Multiplicity="1" />
+          <End Type="zpeterseModel.TextFieldResponse" Role="TextFieldResponse" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Person">
+              <PropertyRef Name="PersonID" />
+            </Principal>
+            <Dependent Role="TextFieldResponse">
+              <PropertyRef Name="Responder" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="TextFieldOwner">
+          <End Type="zpeterseModel.TextBlast" Role="TextBlast" Multiplicity="1" />
+          <End Type="zpeterseModel.TextField" Role="TextField" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="TextBlast">
+              <PropertyRef Name="TextBlastID" />
+            </Principal>
+            <Dependent Role="TextField">
+              <PropertyRef Name="TextBlastID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="ParentTextField">
+          <End Type="zpeterseModel.TextField" Role="TextField" Multiplicity="1" />
+          <End Type="zpeterseModel.TextFieldResponse" Role="TextFieldResponse" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="TextField">
+              <PropertyRef Name="TextFieldID" />
+            </Principal>
+            <Dependent Role="TextFieldResponse">
+              <PropertyRef Name="TextFieldID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityType Name="Picture">
+          <Key>
+            <PropertyRef Name="PictureID" />
+          </Key>
+          <Property Name="PictureID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Picture1" Type="Binary" Nullable="false" MaxLength="Max" FixedLength="false" />
+          <Property Name="TextBlastID" Type="Int32" Nullable="false" />
+          <NavigationProperty Name="TextBlast" Relationship="zpeterseModel.PictureOwner" FromRole="Picture" ToRole="TextBlast" />
+        </EntityType>
+        <Association Name="PictureOwner">
+          <End Type="zpeterseModel.TextBlast" Role="TextBlast" Multiplicity="1" />
+          <End Type="zpeterseModel.Picture" Role="Picture" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="TextBlast">
+              <PropertyRef Name="TextBlastID" />
+            </Principal>
+            <Dependent Role="Picture">
+              <PropertyRef Name="TextBlastID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
       </Schema>
     </edmx:ConceptualModels>
     <!-- C-S mapping content -->
@@ -508,6 +957,8 @@
           <EntitySetMapping Name="Messages">
             <EntityTypeMapping TypeName="zpeterseModel.Message">
               <MappingFragment StoreEntitySet="Message">
+                <ScalarProperty Name="SenderID" ColumnName="SenderID" />
+                <ScalarProperty Name="Text" ColumnName="Text" />
                 <ScalarProperty Name="MessageID" ColumnName="MessageID" />
                 <ScalarProperty Name="MessageThreadID" ColumnName="MessageThreadID" />
                 <ScalarProperty Name="DateTime" ColumnName="DateTime" />
@@ -538,21 +989,13 @@
           <EntitySetMapping Name="People">
             <EntityTypeMapping TypeName="zpeterseModel.Person">
               <MappingFragment StoreEntitySet="Person">
+                <ScalarProperty Name="GCMConnectionString" ColumnName="GCMConnectionString" />
                 <ScalarProperty Name="PersonID" ColumnName="PersonID" />
                 <ScalarProperty Name="FirstName" ColumnName="FirstName" />
                 <ScalarProperty Name="LastName" ColumnName="LastName" />
                 <ScalarProperty Name="Type" ColumnName="Type" />
                 <ScalarProperty Name="Email" ColumnName="Email" />
                 <ScalarProperty Name="Password" ColumnName="Password" />
-              </MappingFragment>
-            </EntityTypeMapping>
-          </EntitySetMapping>
-          <EntitySetMapping Name="Pictures">
-            <EntityTypeMapping TypeName="zpeterseModel.Picture">
-              <MappingFragment StoreEntitySet="Picture">
-                <ScalarProperty Name="PictureID" ColumnName="PictureID" />
-                <ScalarProperty Name="Link" ColumnName="Link" />
-                <ScalarProperty Name="TextBlastID" ColumnName="TextBlastID" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
@@ -589,6 +1032,7 @@
           <EntitySetMapping Name="TextFieldResponses">
             <EntityTypeMapping TypeName="zpeterseModel.TextFieldResponse">
               <MappingFragment StoreEntitySet="TextFieldResponse">
+                <ScalarProperty Name="TextFieldID" ColumnName="TextFieldID" />
                 <ScalarProperty Name="TextFieldResponseID" ColumnName="TextFieldResponseID" />
                 <ScalarProperty Name="Text" ColumnName="Text" />
                 <ScalarProperty Name="Responder" ColumnName="Responder" />
@@ -601,6 +1045,15 @@
                 <ScalarProperty Name="TextViewID" ColumnName="TextViewID" />
                 <ScalarProperty Name="Text" ColumnName="Text" />
                 <ScalarProperty Name="TextBlastID" ColumnName="TextBlastID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Pictures">
+            <EntityTypeMapping TypeName="zpeterseModel.Picture">
+              <MappingFragment StoreEntitySet="Picture">
+                <ScalarProperty Name="TextBlastID" ColumnName="TextBlastID" />
+                <ScalarProperty Name="Picture1" ColumnName="Picture" />
+                <ScalarProperty Name="PictureID" ColumnName="PictureID" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>

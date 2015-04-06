@@ -13,7 +13,6 @@
         <EntityTypeShape EntityType="zpeterseModel.MessageThread" Width="1.5" PointX="0.75" PointY="10" IsExpanded="true" />
         <EntityTypeShape EntityType="zpeterseModel.Mother" Width="1.5" PointX="3" PointY="4.125" IsExpanded="true" />
         <EntityTypeShape EntityType="zpeterseModel.Person" Width="1.5" PointX="0.75" PointY="5.25" IsExpanded="true" />
-        <EntityTypeShape EntityType="zpeterseModel.Picture" Width="1.5" PointX="2.75" PointY="10" IsExpanded="true" />
         <EntityTypeShape EntityType="zpeterseModel.Session" Width="1.5" PointX="3" PointY="7" IsExpanded="true" />
         <EntityTypeShape EntityType="zpeterseModel.TextBlast" Width="1.5" PointX="6" PointY="5.375" IsExpanded="true" />
         <EntityTypeShape EntityType="zpeterseModel.TextField" Width="1.5" PointX="9.75" PointY="2" IsExpanded="true" />
@@ -24,6 +23,20 @@
         <AssociationConnector Association="zpeterseModel.Creator" ManuallyRouted="false" />
         <AssociationConnector Association="zpeterseModel.Person1" ManuallyRouted="false" />
         <AssociationConnector Association="zpeterseModel.Owner" ManuallyRouted="false" />
+        <AssociationConnector Association="zpeterseModel.ParentForumThread" />
+        <AssociationConnector Association="zpeterseModel.Poster" />
+        <AssociationConnector Association="zpeterseModel.ThreadCreator" />
+        <AssociationConnector Association="zpeterseModel.PartOfGroup" />
+        <AssociationConnector Association="zpeterseModel.PersonInGroup" />
+        <AssociationConnector Association="zpeterseModel.MessageSender" />
+        <AssociationConnector Association="zpeterseModel.ParentMessageThread" />
+        <AssociationConnector Association="zpeterseModel.Mother1" />
+        <AssociationConnector Association="zpeterseModel.Nurse" />
+        <AssociationConnector Association="zpeterseModel.Responder" />
+        <AssociationConnector Association="zpeterseModel.TextFieldOwner" />
+        <AssociationConnector Association="zpeterseModel.ParentTextField" />
+        <EntityTypeShape EntityType="zpeterseModel.Picture" Width="1.5" PointX="8.25" PointY="13" />
+        <AssociationConnector Association="zpeterseModel.PictureOwner" />
       </Diagram>
     </edmx:Diagrams>
   </edmx:Designer>

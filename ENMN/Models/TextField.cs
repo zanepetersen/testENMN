@@ -14,7 +14,15 @@ namespace ENMN.Models
     
     public partial class TextField
     {
+        public TextField()
+        {
+            this.TextFieldResponses = new HashSet<TextFieldResponse>();
+        }
+    
         public int TextFieldID { get; set; }
         public int TextBlastID { get; set; }
+    
+        public virtual TextBlast TextBlast { get; set; }
+        public virtual ICollection<TextFieldResponse> TextFieldResponses { get; set; }
     }
 }

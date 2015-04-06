@@ -17,6 +17,8 @@ namespace ENMN.Models
         public TextBlast()
         {
             this.TextViews = new HashSet<TextView>();
+            this.TextFields = new HashSet<TextField>();
+            this.Pictures = new HashSet<Picture>();
         }
     
         public int TextBlastID { get; set; }
@@ -28,5 +30,7 @@ namespace ENMN.Models
         public virtual Group Group { get; set; }
         public virtual Person Person { get; set; }
         public virtual ICollection<TextView> TextViews { get; set; }
+        public virtual ICollection<TextField> TextFields { get; set; }
+        public virtual ICollection<Picture> Pictures { get; set; }
     }
 }

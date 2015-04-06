@@ -18,5 +18,10 @@ namespace ENMN.Models
         public int MessageThreadID { get; set; }
         public System.DateTime DateTime { get; set; }
         public int OrderNo { get; set; }
+        public string Text { get; set; }
+        public int SenderID { get; set; }
+    
+        public virtual Person Person { get; set; }
+        public virtual MessageThread MessageThread { get; set; }
     }
 }

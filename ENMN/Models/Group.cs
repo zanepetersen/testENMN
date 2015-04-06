@@ -17,6 +17,7 @@ namespace ENMN.Models
         public Group()
         {
             this.TextBlasts = new HashSet<TextBlast>();
+            this.GroupMembers = new HashSet<GroupMember>();
         }
     
         public int GroupID { get; set; }
@@ -24,5 +25,6 @@ namespace ENMN.Models
         public bool isDeleted { get; set; }
     
         public virtual ICollection<TextBlast> TextBlasts { get; set; }
+        public virtual ICollection<GroupMember> GroupMembers { get; set; }
     }
 }

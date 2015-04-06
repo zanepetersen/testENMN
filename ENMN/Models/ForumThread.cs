@@ -14,8 +14,16 @@ namespace ENMN.Models
     
     public partial class ForumThread
     {
+        public ForumThread()
+        {
+            this.ForumPosts = new HashSet<ForumPost>();
+        }
+    
         public int ForumThreadID { get; set; }
         public int Creator { get; set; }
         public string Title { get; set; }
+    
+        public virtual ICollection<ForumPost> ForumPosts { get; set; }
+        public virtual Person Person { get; set; }
     }
 }

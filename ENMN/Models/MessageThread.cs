@@ -14,8 +14,17 @@ namespace ENMN.Models
     
     public partial class MessageThread
     {
+        public MessageThread()
+        {
+            this.Messages = new HashSet<Message>();
+        }
+    
         public int MessageThreadID { get; set; }
         public int NurseID { get; set; }
         public int MotherID { get; set; }
+    
+        public virtual ICollection<Message> Messages { get; set; }
+        public virtual Person Person { get; set; }
+        public virtual Person Person1 { get; set; }
     }
 }

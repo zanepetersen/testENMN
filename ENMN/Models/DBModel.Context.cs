@@ -33,11 +33,11 @@ namespace ENMN.Models
         public virtual DbSet<MessageThread> MessageThreads { get; set; }
         public virtual DbSet<Mother> Mothers { get; set; }
         public virtual DbSet<Person> People { get; set; }
-        public virtual DbSet<Picture> Pictures { get; set; }
         public virtual DbSet<Session> Sessions { get; set; }
         public virtual DbSet<TextBlast> TextBlasts { get; set; }
         public virtual DbSet<TextField> TextFields { get; set; }
         public virtual DbSet<TextFieldResponse> TextFieldResponses { get; set; }
         public virtual DbSet<TextView> TextViews { get; set; }
+        public virtual DbSet<Picture> Pictures { get; set; }
     }
 }

@@ -20,5 +20,8 @@ namespace ENMN.Models
         public int OrderNo { get; set; }
         public System.DateTime DateTime { get; set; }
         public string Text { get; set; }
+    
+        public virtual ForumThread ForumThread { get; set; }
+        public virtual Person Person { get; set; }
     }
 }
