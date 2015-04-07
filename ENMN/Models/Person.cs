@@ -11,6 +11,7 @@ namespace ENMN.Models
 {
     using System;
     using System.Collections.Generic;
+    using System.ComponentModel.DataAnnotations;
     
     public partial class Person
     {
@@ -31,7 +32,10 @@ namespace ENMN.Models
         public string FirstName { get; set; }
         public string LastName { get; set; }
         public string Type { get; set; }
+        [Required(ErrorMessage = "Please Provide Username", AllowEmptyStrings = false)]
         public string Email { get; set; }
+        [Required(ErrorMessage = "Please provide password", AllowEmptyStrings = false)]
+        [DataType(System.ComponentModel.DataAnnotations.DataType.Password)]
         public string Password { get; set; }
         public string GCMConnectionString { get; set; }
     
