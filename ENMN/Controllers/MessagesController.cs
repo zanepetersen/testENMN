@@ -37,11 +37,12 @@ namespace ENMN.Controllers
         }
 
         // GET: Messages/Create
+        [HttpGet]
         public ActionResult Create()
         {
             ViewBag.SenderID = new SelectList(db.People, "PersonID", "FirstName");
             ViewBag.MessageThreadID = new SelectList(db.MessageThreads, "MessageThreadID", "MessageThreadID");
-            return View();
+            return PartialView("_CreatePartial", new ENMN.Models.Message());
         }
 
         // POST: Messages/Create
@@ -49,18 +50,27 @@ namespace ENMN.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create([Bind(Include = "MessageID,MessageThreadID,DateTime,OrderNo,Text,SenderID")] Message message)
+        public ActionResult Create([Bind(Include = "MessageID,MessageThreadID,DateTime,OrderNo,Text,SenderID")] Message message, DateTime dateTime, string senderID, string threadID)
         {
+            int temp = 0;
+            message.DateTime = dateTime;
+            temp = Convert.ToInt32(senderID);
+            message.SenderID = temp;
+            temp = Convert.ToInt32(threadID);
+            message.MessageThreadID = temp;
+            zpeterseEntities dbc = new zpeterseEntities();
+            message.OrderNo = dbc.Messages.Where(m=> m.MessageThreadID == temp).Count();
             if (ModelState.IsValid)
             {
                 db.Messages.Add(message);
                 db.SaveChanges();
-                return RedirectToAction("Index");
+                return RedirectToAction("Index", new {@ThreadID = threadID});
             }
 
             ViewBag.SenderID = new SelectList(db.People, "PersonID", "FirstName", message.SenderID);
             ViewBag.MessageThreadID = new SelectList(db.MessageThreads, "MessageThreadID", "MessageThreadID", message.MessageThreadID);
-            return View(message);
+            return Redirect("Messages?"+threadID);
+            //return View(message);
         }
 
         // GET: Messages/Edit/5

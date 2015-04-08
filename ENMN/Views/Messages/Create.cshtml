@@ -65,7 +65,7 @@
 
 <div>
     @*@Html.ActionLink("Back to List", "Index")*@
-    @Html.ActionLink("Back to List", "Index", "Messages", new { @ThreadID = item.MessageThreadID }, null)
+    @Html.ActionLink("Back to List", "Index", "Messages", new { @ThreadID = @Request.QueryString["ThreadID"] }, null)
 </div>
 
 @section Scripts {
