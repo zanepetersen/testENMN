@@ -64,6 +64,8 @@ namespace ENMN.Controllers
             {
                 db.Messages.Add(message);
                 db.SaveChanges();
+                Person temp = db.People.where(m => m.PersonID = message.MessageThread.MotherID);
+                sendGCM(temp.GCMConnectionString, message.MessageID);
                 return RedirectToAction("Index", new {@ThreadID = threadID});
             }
 
