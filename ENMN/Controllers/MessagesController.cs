@@ -37,11 +37,12 @@ namespace ENMN.Controllers
         }
 
         // GET: Messages/Create
+        [HttpGet]
         public ActionResult Create()
         {
             ViewBag.SenderID = new SelectList(db.People, "PersonID", "FirstName");
             ViewBag.MessageThreadID = new SelectList(db.MessageThreads, "MessageThreadID", "MessageThreadID");
-            return View();
+            return PartialView("_CreatePartial", new ENMN.Models.Message());
         }
 
         // POST: Messages/Create
@@ -49,20 +50,27 @@ namespace ENMN.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create([Bind(Include = "MessageID,MessageThreadID,DateTime,OrderNo,Text,SenderID")] Message message)
+        public ActionResult Create([Bind(Include = "MessageID,MessageThreadID,DateTime,OrderNo,Text,SenderID")] Message message, DateTime dateTime, string senderID, string threadID)
         {
+            int temp = 0;
+            message.DateTime = dateTime;
+            temp = Convert.ToInt32(senderID);
+            message.SenderID = temp;
+            temp = Convert.ToInt32(threadID);
+            message.MessageThreadID = temp;
+            zpeterseEntities dbc = new zpeterseEntities();
+            message.OrderNo = dbc.Messages.Where(m=> m.MessageThreadID == temp).Count();
             if (ModelState.IsValid)
             {
                 db.Messages.Add(message);
                 db.SaveChanges();
-                Person temp= db.People.where(m => m.PersonID=message.MessageThread.MotherID);
-                sendGCM(temp.GCMConnectionString ,message.MessageID);
-                return RedirectToAction("Index");
+                return RedirectToAction("Index", new {@ThreadID = threadID});
             }
 
             ViewBag.SenderID = new SelectList(db.People, "PersonID", "FirstName", message.SenderID);
             ViewBag.MessageThreadID = new SelectList(db.MessageThreads, "MessageThreadID", "MessageThreadID", message.MessageThreadID);
-            return View(message);
+            return Redirect("Messages?"+threadID);
+            //return View(message);
         }
 
         // GET: Messages/Edit/5
@@ -133,46 +141,6 @@ namespace ENMN.Controllers
                 db.Dispose();
             }
             base.Dispose(disposing);
-        }
-
-        void sendGCM(string regId, int messageId)
-        {
-            var applicationID = "AIzaSyCb7ulAlp7e7lQQ_gjtiZvIB0FpjSm0IU8"; //the API key is this the right thing?
-
-
-            var SENDER_ID = "763683898982";  //project ID
-
-                WebRequest tRequest;
-                tRequest = WebRequest.Create("https://android.googleapis.com/gcm/send");
-                tRequest.Method = "post";
-                tRequest.ContentType = " application/x-www-form-urlencoded;charset=UTF-8";
-                tRequest.Headers.Add(string.Format("Authorization: key={0}", applicationID));
-
-                tRequest.Headers.Add(string.Format("Sender: id={0}", SENDER_ID));
-
-                // string postData = "{ 'registration_id': [ '" + regId + "' ], 'data': {'message': '" + txtMsg.Text + "'}}";
-                string postData = "collapse_key=score_update&time_to_live=108&delay_while_idle=1&data.message=" + messageId + "&data.time=" + System.DateTime.Now.ToString() + "&registration_id=" + regId;
-                Console.WriteLine(postData);
-                Byte[] byteArray = Encoding.UTF8.GetBytes(postData);
-                tRequest.ContentLength = byteArray.Length;
-
-                Stream dataStream = tRequest.GetRequestStream();
-                dataStream.Write(byteArray, 0, byteArray.Length);
-                dataStream.Close();
-
-                WebResponse tResponse = tRequest.GetResponse();
-
-                dataStream = tResponse.GetResponseStream();
-
-                StreamReader tReader = new StreamReader(dataStream);
-
-                String sResponseFromServer = tReader.ReadToEnd();
-
-                lblStat.Text = sResponseFromServer;
-                tReader.Close();
-                dataStream.Close();
-                tResponse.Close();
-            
         }
     }
 }

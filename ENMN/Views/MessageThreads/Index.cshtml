@@ -11,10 +11,10 @@
 </p>
 <table class="table">
     <tr>
-        <th>
+        @*<th>*@
             @*@Html.DisplayNameFor(model => model.Person.FirstName)*@
-            Nurse
-        </th>
+            @*Nurse
+        </th>*@
         <th>
             @*@Html.DisplayNameFor(model => model.Person1.FirstName)*@
             Mother
@@ -24,9 +24,9 @@
 
 @foreach (var item in Model) {
     <tr>
-        <td>
+        @*<td>
             @Html.DisplayFor(modelItem => item.Person1.FirstName)
-        </td>
+        </td>*@
         <td>
             @Html.DisplayFor(modelItem => item.Person.FirstName) @Html.DisplayFor(modelitem => item.Person.LastName)
         </td>

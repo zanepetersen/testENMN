@@ -7,26 +7,29 @@
 <h2>Index</h2>
 
 <p>
-    @Html.ActionLink("Create New", "Create")
+    @*@Html.ActionLink("Create New", "Create", "Messages", new { @ThreadID = @Request.QueryString["ThreadID"] }, null)*@
     @*@Html.ActionLink("Create New", "Create", "Messages", new { @ThreadID = item.MessageThreadID }, null)*@
 </p>
 <table class="table">
     <tr>
         <th>
-            @Html.DisplayNameFor(model => model.DateTime)
+            @*@Html.DisplayNameFor(model => model.DateTime)*@
+            Time
         </th>
-        <th>
+        @*<th>
             @Html.DisplayNameFor(model => model.OrderNo)
+        </th>*@
+        <th>
+            @*@Html.DisplayNameFor(model => model.Person.FirstName)*@
+            Sent By
         </th>
         <th>
-            @Html.DisplayNameFor(model => model.Text)
+            @*@Html.DisplayNameFor(model => model.Text)*@
+            Message
         </th>
-        <th>
-            @Html.DisplayNameFor(model => model.Person.FirstName)
-        </th>
-        <th>
+        @*<th>
             @Html.DisplayNameFor(model => model.MessageThread.MessageThreadID)
-        </th>
+        </th>*@
         <th></th>
     </tr>
 
@@ -35,18 +38,19 @@
         <td>
             @Html.DisplayFor(modelItem => item.DateTime)
         </td>
-        <td>
+        @*<td>
             @Html.DisplayFor(modelItem => item.OrderNo)
+        </td>*@
+        <td>
+            @Html.DisplayFor(modelItem => item.Person.FirstName)
+            @Html.DisplayFor(modelItem => item.Person.LastName)
         </td>
         <td>
             @Html.DisplayFor(modelItem => item.Text)
         </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.Person.FirstName)
-        </td>
-        <td>
+        @*<td>
             @Html.DisplayFor(modelItem => item.MessageThread.MessageThreadID)
-        </td>
+        </td>*@
         @*<td>
             @Html.ActionLink("Edit", "Edit", new { id=item.MessageID }) |
             @Html.ActionLink("Details", "Details", new { id=item.MessageID }) |
@@ -57,8 +61,8 @@
 
 </table>
 <div>
-@*<% m = new ENMN.Models.Message(); %>
-
- @Html.Partial("_CreatePartial", new ENMN.Models.Message())*@
- @*@Html.RenderPartial("_CreatePartial", new { MessageThreadID = Model.MessageThread.MessageThreadID , })*@
+ @{Html.RenderAction("Create", "Messages");}
+</div>
+<div>
+    @Html.ActionLink("Back to Message Threads", "Index", "MessageThreads")
 </div>

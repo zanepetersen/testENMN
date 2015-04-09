@@ -52,7 +52,7 @@ namespace ENMN.Controllers
                         Session["LoggedUserID"] = v.PersonID.ToString();
                         Session["LoggedUserFirstName"] = v.FirstName.ToString();
                         Session["LoggedUserLastName"] = v.LastName.ToString();
-                        Session["loggedUserRole"] = v.Type.ToString();
+                        Session["loggedUserType"] = v.Type.ToString();
                         return RedirectToAction("Index");
                     }
                 }

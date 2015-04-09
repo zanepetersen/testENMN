@@ -17,7 +17,8 @@ namespace ENMN.Controllers
         // GET: MessageThreads
         public ActionResult Index()
         {
-            var messageThreads = db.MessageThreads.Include(m => m.Person).Include(m => m.Person1);
+            int loggedID = Convert.ToInt32(Session["LoggedUserID"].ToString());
+            var messageThreads = db.MessageThreads.Include(m => m.Person).Include(m => m.Person1).Where(m => m.NurseID == loggedID);
             return View(messageThreads.ToList());
         }
 
@@ -39,7 +40,8 @@ namespace ENMN.Controllers
         // GET: MessageThreads/Create
         public ActionResult Create()
         {
-            ViewBag.MotherID = new SelectList(db.People, "PersonID", "FirstName");
+            string type = "MOTHER";
+            ViewBag.MotherID = new SelectList(db.People.Where(m => m.Type == type), "PersonID", "FirstName");
             ViewBag.NurseID = new SelectList(db.People, "PersonID", "FirstName");
             return View();
         }
@@ -51,6 +53,7 @@ namespace ENMN.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult Create([Bind(Include = "MessageThreadID,NurseID,MotherID")] MessageThread messageThread)
         {
+            messageThread.NurseID = Convert.ToInt32(Session["LoggedUserID"].ToString());
             if (ModelState.IsValid)
             {
                 db.MessageThreads.Add(messageThread);

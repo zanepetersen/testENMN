@@ -1,14 +1,25 @@
 ﻿@model ENMN.Models.Message
 
-@using (Html.BeginForm()) 
+
+
+@using (Html.BeginForm("Create", "Messages", new { senderID = Session["LoggedUserID"],  threadID = Request.QueryString["ThreadID"], dateTime = DateTime.Now }))
 {
     @Html.AntiForgeryToken()
     
     <div class="form-horizontal">
-        <h4>Message</h4>
+        <h4>Reply or Send New Message</h4>
         <hr />
         @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+
         <div class="form-group">
+            @Html.LabelFor(model => model.Text, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.TextAreaFor(model => model.Text, new { htmlAttributes = new { @class = "form-control" }, @cols = "120", @rows = "8" })
+                @Html.ValidationMessageFor(model => model.Text, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        @*<div class="form-group">
             @Html.LabelFor(model => model.MessageThreadID, htmlAttributes: new { @class = "control-label col-md-2" })
             <div class="col-md-10">
                 @Html.EditorFor(model => model.MessageThreadID, new { htmlAttributes = new { @class = "form-control" } })
@@ -33,13 +44,21 @@
         </div>
 
         <div class="form-group">
+            @Html.LabelFor(model => model.SenderID, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.EditorFor(model => model.SenderID, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.SenderID, "", new { @class = "text-danger" })
+            </div>
+        </div>*@
+
+        <div class="form-group">
             <div class="col-md-offset-2 col-md-10">
-                <input type="submit" value="Create" class="btn btn-default" />
+                <input type="submit" value="Send" class="btn btn-default" />
             </div>
         </div>
     </div>
 }
 
-<div>
+@*<div>
     @Html.ActionLink("Back to List", "Index")
-</div>
+</div>*@
