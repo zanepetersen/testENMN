@@ -6,6 +6,8 @@ using System.Linq;
 using System.Net;
 using System.Web;
 using System.Web.Mvc;
+using System.Text;
+using System.IO;
 using ENMN.Models;
 
 namespace ENMN.Controllers
@@ -64,8 +66,9 @@ namespace ENMN.Controllers
             {
                 db.Messages.Add(message);
                 db.SaveChanges();
-                Person t = db.People.where(m => m.PersonID = message.MessageThread.MotherID);
-                sendGCM(t.GCMConnectionString, message.MessageID);
+                int t = dbc.MessageThreads.Where(m => m.MessageThreadID == message.MessageThreadID).First().MotherID;
+                String id = dbc.People.Where(m => m.PersonID == t).First().GCMConnectionString;
+                sendGCM(id, message.MessageID);
                 return RedirectToAction("Index", new {@ThreadID = threadID});
             }
 
@@ -144,8 +147,8 @@ namespace ENMN.Controllers
             }
             base.Dispose(disposing);
         }
-
-        void send(string regId, int messageId)
+        
+        void sendGCM(string regId, int messageId)
         {
             var applicationID = "AIzaSyCb7ulAlp7e7lQQ_gjtiZvIB0FpjSm0IU8";
 
@@ -176,7 +179,6 @@ namespace ENMN.Controllers
 
             String sResponseFromServer = tReader.ReadToEnd();
 
-            lblStat.Text = sResponseFromServer;
             tReader.Close();
             dataStream.Close();
             tResponse.Close();
