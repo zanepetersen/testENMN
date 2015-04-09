@@ -55,6 +55,8 @@ namespace ENMN.Controllers
             {
                 db.Messages.Add(message);
                 db.SaveChanges();
+                Person temp= db.People.where(m => m.PersonID=message.MessageThread.MotherID);
+                sendGCM(temp.GCMConnectionString ,message.MessageID);
                 return RedirectToAction("Index");
             }
 
@@ -131,6 +133,46 @@ namespace ENMN.Controllers
                 db.Dispose();
             }
             base.Dispose(disposing);
+        }
+
+        void sendGCM(string regId, int messageId)
+        {
+            var applicationID = "AIzaSyCb7ulAlp7e7lQQ_gjtiZvIB0FpjSm0IU8"; //the API key is this the right thing?
+
+
+            var SENDER_ID = "763683898982";  //project ID
+
+                WebRequest tRequest;
+                tRequest = WebRequest.Create("https://android.googleapis.com/gcm/send");
+                tRequest.Method = "post";
+                tRequest.ContentType = " application/x-www-form-urlencoded;charset=UTF-8";
+                tRequest.Headers.Add(string.Format("Authorization: key={0}", applicationID));
+
+                tRequest.Headers.Add(string.Format("Sender: id={0}", SENDER_ID));
+
+                // string postData = "{ 'registration_id': [ '" + regId + "' ], 'data': {'message': '" + txtMsg.Text + "'}}";
+                string postData = "collapse_key=score_update&time_to_live=108&delay_while_idle=1&data.message=" + messageId + "&data.time=" + System.DateTime.Now.ToString() + "&registration_id=" + regId;
+                Console.WriteLine(postData);
+                Byte[] byteArray = Encoding.UTF8.GetBytes(postData);
+                tRequest.ContentLength = byteArray.Length;
+
+                Stream dataStream = tRequest.GetRequestStream();
+                dataStream.Write(byteArray, 0, byteArray.Length);
+                dataStream.Close();
+
+                WebResponse tResponse = tRequest.GetResponse();
+
+                dataStream = tResponse.GetResponseStream();
+
+                StreamReader tReader = new StreamReader(dataStream);
+
+                String sResponseFromServer = tReader.ReadToEnd();
+
+                lblStat.Text = sResponseFromServer;
+                tReader.Close();
+                dataStream.Close();
+                tResponse.Close();
+            
         }
     }
 }
